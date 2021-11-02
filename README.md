@@ -1,4 +1,4 @@
-# DKIM
+# DKIM signatures (JAVA)
 Generation and validation of DKIM email signatures (DomainKeys Identified Mail) in JAVA
 
 This example code needs following dependencies:
