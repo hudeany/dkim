@@ -1,5 +1,5 @@
 # DKIM
-Generation and validation of DKIM email signatures (DomainKeys Identified Mail)
+Generation and validation of DKIM email signatures (DomainKeys Identified Mail) in JAVA
 
 This example code needs following dependencies:
 - activation-1.1.jar
