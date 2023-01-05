@@ -1,4 +1,4 @@
-package de.soderer.utilities.mail.dkim;
+package de.soderer.utilities;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
@@ -31,7 +31,7 @@ public class QuotedPrintableCodec {
 						// Ignore this '=' char and the following CR
 						i++;
 					} else if ((i + 2) < charArray.length) {
-						decodedByteArray.write(DkimUtilities.hexToByte(nextChar, charArray[i + 2]));
+						decodedByteArray.write(BitUtilities.hexToByte(nextChar, charArray[i + 2]));
 						i = i + 2;
 					} else {
 						// Ignore this '=' char and the following single char. Error state because hex must have 2 chars
@@ -68,7 +68,7 @@ public class QuotedPrintableCodec {
 				currentLineLength = 0;
 			}
 
-			encodedText.append("=").append(DkimUtilities.byteToHex(data));
+			encodedText.append("=").append(BitUtilities.byteToHex(data));
 			currentLineLength += 3;
 		}
 		return encodedText.toString();

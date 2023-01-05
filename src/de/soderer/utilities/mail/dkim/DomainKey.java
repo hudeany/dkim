@@ -19,6 +19,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import de.soderer.utilities.TextUtilities;
+import de.soderer.utilities.Utilities;
+
 public final class DomainKey {
 	private static final String DKIM_VERSION = "DKIM1";
 	private static final String EMAIL_SERVICE_TYPE = "email";
@@ -53,7 +56,7 @@ public final class DomainKey {
 		}
 
 		final String publicKeyTagValue = getTagValue('p');
-		if (DkimUtilities.isBlank(publicKeyTagValue)) {
+		if (Utilities.isBlank(publicKeyTagValue)) {
 			throw new Exception("Mandatory dkim data for public key (p=) is missing or empty.");
 		}
 		publicKey = getPublicKey(publicKeyTagValue);
@@ -163,12 +166,12 @@ public final class DomainKey {
 		try {
 			final Signature signingSignature = Signature.getInstance(DkimUtilities.SIGNATURE_ALGORITHM_NAME);
 			signingSignature.initSign(privateKey);
-			signingSignature.update("abc123".getBytes(StandardCharsets.UTF_8));
+			signingSignature.update(TextUtilities.GERMAN_TEST_STRING.getBytes(StandardCharsets.UTF_8));
 			final byte[] signatureBytes = signingSignature.sign();
 
 			final Signature verifyingSignature = Signature.getInstance(DkimUtilities.SIGNATURE_ALGORITHM_NAME);
 			verifyingSignature.initVerify(publicKey);
-			verifyingSignature.update("abc123".getBytes(StandardCharsets.UTF_8));
+			verifyingSignature.update(TextUtilities.GERMAN_TEST_STRING.getBytes(StandardCharsets.UTF_8));
 
 			if (!verifyingSignature.verify(signatureBytes)) {
 				throw new Exception("Incompatible private key and public key");
