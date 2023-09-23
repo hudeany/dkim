@@ -25,11 +25,11 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
-import de.soderer.utilities.IoUtilities;
-import de.soderer.utilities.MailUtilities;
-import de.soderer.utilities.TextUtilities;
-import de.soderer.utilities.TextUtilities.LineBreak;
-import de.soderer.utilities.Utilities;
+import de.soderer.utilities.mail.dkim.utilities.IoUtilities;
+import de.soderer.utilities.mail.dkim.utilities.MailUtilities;
+import de.soderer.utilities.mail.dkim.utilities.TextUtilities;
+import de.soderer.utilities.mail.dkim.utilities.TextUtilities.LineBreak;
+import de.soderer.utilities.mail.dkim.utilities.Utilities;
 
 public final class DkimUtilities {
 	public static final String ALLOWED_DKIM_SIGNATURE_ALGORITHM_CODE = "rsa-sha256";

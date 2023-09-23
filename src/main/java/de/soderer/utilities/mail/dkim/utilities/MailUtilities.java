@@ -1,4 +1,4 @@
-package de.soderer.utilities;
+package de.soderer.utilities.mail.dkim.utilities;
 
 import java.util.ArrayList;
 import java.util.List;

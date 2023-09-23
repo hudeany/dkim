@@ -1,4 +1,4 @@
-package de.soderer.utilities;
+package de.soderer.utilities.mail.dkim.utilities;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -42,9 +42,6 @@ public class DateUtilities {
 	public static final String YYYY_MM_DD_HHMMSS = "yyyy-MM-dd HH:mm:ss";
 	public static final String YYYYMMDD_HHMMSS = "yyyyMMdd-HHmmss";
 	public static final String HHMM = "HHmm";
-
-	private static final Pattern MONTH_RULE_PATTERN = Pattern.compile("\\d{0,2}M\\d{2}:\\d{4}");
-	private static final Pattern WEEKDAILY_RULE_PATTERN = Pattern.compile("\\d\\D\\D:\\d{4}");
 
 	/** Date format for ISO 8601 */
 	public static final String ISO_8601_DATE_FORMAT_NO_TIMEZONE = "yyyy-MM-dd";

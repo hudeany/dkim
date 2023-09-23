@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-import de.soderer.utilities.TextUtilities;
-import de.soderer.utilities.Utilities;
+import de.soderer.utilities.mail.dkim.utilities.TextUtilities;
+import de.soderer.utilities.mail.dkim.utilities.Utilities;
 
 public final class DomainKey {
 	private static final String DKIM_VERSION = "DKIM1";

@@ -32,10 +32,10 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
-import de.soderer.utilities.DateUtilities;
-import de.soderer.utilities.IoUtilities;
-import de.soderer.utilities.QuotedPrintableCodec;
-import de.soderer.utilities.Utilities;
+import de.soderer.utilities.mail.dkim.utilities.DateUtilities;
+import de.soderer.utilities.mail.dkim.utilities.IoUtilities;
+import de.soderer.utilities.mail.dkim.utilities.QuotedPrintableCodec;
+import de.soderer.utilities.mail.dkim.utilities.Utilities;
 
 public class DkimSignedMessage extends MimeMessage {
 	private static final int MAXIMUM_MESSAGE_HEADER_LENGTH = 67;
