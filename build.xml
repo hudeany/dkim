@@ -35,6 +35,8 @@
 			
 			<fileset dir="" includes="LICENSE.txt"/>
 		</jar>
+		<checksum file="${buildPath}/dkim-${version}.jar" fileext=".md5" forceOverwrite="yes" />
+		<checksum file="${buildPath}/dkim-${version}.jar" algorithm="SHA-1" fileext=".sha1" forceOverwrite="yes" />
 		
 		<jar destfile="${buildPath}/dkim-${version}_sources.jar">
 			<manifest>
@@ -45,6 +47,8 @@
 			
 			<fileset dir="" includes="LICENSE.txt"/>
 		</jar>
+		<checksum file="${buildPath}/dkim-${version}_sources.jar" fileext=".md5" forceOverwrite="yes"/>
+		<checksum file="${buildPath}/dkim-${version}_sources.jar" algorithm="SHA-1" fileext=".sha1" forceOverwrite="yes" />
 	</target>
 	
 	<target name="cleanup_after">
