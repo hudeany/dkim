@@ -16,7 +16,30 @@
 		<mkdir dir="${buildPath}/bin" />
 	</target>
 	
-	<target name="create_jar">
+	<target name="download_dependencies">
+		<mkdir dir="lib" />
+		<delete includeEmptyDirs="true">
+			<fileset dir="lib">
+				<include name="*" />
+			</fileset>
+		</delete>
+	
+		<get src="https://repo1.maven.org/maven2/com/sun/mail/javax.mail/1.6.2/javax.mail-1.6.2.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar" dest="lib/" />
+		
+		<mkdir dir="lib_test/" />
+		<delete includeEmptyDirs="true">
+			<fileset dir="lib_test/">
+				<include name="*" />
+			</fileset>
+		</delete>
+		
+		<get src="https://repo1.maven.org/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar" dest="lib_test/" />
+	</target>
+	
+	<target name="create_jar" depends="cleanup_before, download_dependencies">
 		<path id="build.classpath">
 			<fileset dir="lib">
 				<include name="*.jar" />
