@@ -14,10 +14,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.mail.Header;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -30,6 +26,10 @@ import de.soderer.utilities.mail.dkim.utilities.MailUtilities;
 import de.soderer.utilities.mail.dkim.utilities.TextUtilities;
 import de.soderer.utilities.mail.dkim.utilities.TextUtilities.LineBreak;
 import de.soderer.utilities.mail.dkim.utilities.Utilities;
+import jakarta.mail.Header;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 
 public final class DkimUtilities {
 	public static final String ALLOWED_DKIM_SIGNATURE_ALGORITHM_CODE = "rsa-sha256";

@@ -26,16 +26,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.mail.Header;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
-
 import de.soderer.utilities.mail.dkim.utilities.DateUtilities;
 import de.soderer.utilities.mail.dkim.utilities.IoUtilities;
 import de.soderer.utilities.mail.dkim.utilities.QuotedPrintableCodec;
 import de.soderer.utilities.mail.dkim.utilities.Utilities;
+import jakarta.mail.Header;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeUtility;
 
 public class DkimSignedMessage extends MimeMessage {
 	private static final int MAXIMUM_MESSAGE_HEADER_LENGTH = 67;
