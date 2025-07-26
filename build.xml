@@ -50,6 +50,8 @@
 		
 		<javac debug="true" nowarn="true" deprecation="false" destdir="${buildPath}/bin" fork="yes" source="1.8" target="1.8" srcdir="src/main/java" includeantruntime="false" encoding="UTF-8">
 			<classpath refid="build.classpath" />
+			<compilerarg value="-Xlint:unchecked" />
+			<compilerarg value="-parameters" />
 		</javac>
 		
 		<jar destfile="${buildPath}/dkim-${version}.jar">
