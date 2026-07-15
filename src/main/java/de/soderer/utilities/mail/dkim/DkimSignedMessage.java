@@ -56,6 +56,14 @@ public class DkimSignedMessage extends MimeMessage {
 		this.messageID = messageID;
 	}
 
+	/**
+	 * Detect characters that could be used for header injection (CRLF injection) when embedding
+	 * externally influenced values (domain, selector) unescaped into the DKIM-Signature header.
+	 */
+	private static boolean containsHeaderInjectionCharacters(final String value) {
+		return value.indexOf('\r') >= 0 || value.indexOf('\n') >= 0 || value.indexOf(';') >= 0;
+	}
+
 	@Override
 	protected void updateMessageID() throws MessagingException {
 		if (messageID != null) {
@@ -66,8 +74,12 @@ public class DkimSignedMessage extends MimeMessage {
 	public DkimSignedMessage setDkimKeyData(final String domain, final String selector, final RSAPrivateKey privateRsaKey, final String identity) throws Exception {
 		if (Utilities.isBlank(domain)) {
 			throw new Exception("DKIM domain may not be empty");
+		} else if (containsHeaderInjectionCharacters(domain)) {
+			throw new Exception("DKIM domain contains invalid characters");
 		} else if (Utilities.isBlank(selector)) {
 			throw new Exception("DKIM key selector may not be empty");
+		} else if (containsHeaderInjectionCharacters(selector)) {
+			throw new Exception("DKIM key selector contains invalid characters");
 		} else if (privateRsaKey == null) {
 			throw new Exception("DKIM private key may not be empty");
 		}

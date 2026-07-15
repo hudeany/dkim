@@ -41,8 +41,9 @@ public class IoUtilities {
 		long bytesCopied = 0;
 		while ((lengthRead = inputReader.read(buffer)) > -1) {
 			final String data = new String(buffer, 0, lengthRead);
-			outputStream.write(data.getBytes(encoding));
-			bytesCopied += lengthRead;
+			final byte[] dataBytes = data.getBytes(encoding);
+			outputStream.write(dataBytes);
+			bytesCopied += dataBytes.length;
 		}
 		outputStream.flush();
 		return bytesCopied;

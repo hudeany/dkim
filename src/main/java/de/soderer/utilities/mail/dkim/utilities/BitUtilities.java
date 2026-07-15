@@ -120,10 +120,21 @@ public class BitUtilities {
 	}
 
 	public static byte[] getByteArrayFromHexString(final String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("Invalid empty hex string value");
+		} else if (value.length() % 2 != 0) {
+			throw new IllegalArgumentException("Invalid hex string value with odd length: " + value);
+		}
+
 		final int length = value.length();
 		final byte[] data = new byte[length / 2];
 		for (int i = 0; i < length; i += 2) {
-			data[i / 2] = (byte) ((Character.digit(value.charAt(i), 16) << 4) + Character.digit(value.charAt(i + 1), 16));
+			final int highNibble = Character.digit(value.charAt(i), 16);
+			final int lowNibble = Character.digit(value.charAt(i + 1), 16);
+			if (highNibble < 0 || lowNibble < 0) {
+				throw new IllegalArgumentException("Invalid hex character in value at index " + i + ": " + value);
+			}
+			data[i / 2] = (byte) ((highNibble << 4) + lowNibble);
 		}
 		return data;
 	}

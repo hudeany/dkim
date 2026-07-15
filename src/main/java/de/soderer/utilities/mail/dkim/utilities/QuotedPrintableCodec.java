@@ -9,7 +9,6 @@ import java.nio.charset.Charset;
 public class QuotedPrintableCodec {
 	/**
 	 * Decode text from QUOTED-PRINTABLE
-	 *
 	 * @param value
 	 * @param charset
 	 * @return

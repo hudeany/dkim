@@ -60,7 +60,7 @@ public final class DomainKey {
 			throw new Exception("Mandatory dkim data for public key (p=) is missing or empty.");
 		}
 		publicKey = getPublicKey(publicKeyTagValue);
-		if (null == publicKeyTagValue) {
+		if (null == publicKey) {
 			throw new Exception("Incompatible public key p=" + getTagValue('p') + ".");
 		}
 	}

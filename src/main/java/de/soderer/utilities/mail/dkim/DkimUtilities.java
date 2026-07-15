@@ -155,6 +155,9 @@ public final class DkimUtilities {
 	private static Hashtable<String, String> getEnvironment() {
 		final Hashtable<String, String> environment = new Hashtable<>();
 		environment.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+		// Prevent unbounded blocking on unresponsive or malicious DNS servers (DoS protection)
+		environment.put("com.sun.jndi.dns.timeout.initial", "5000");
+		environment.put("com.sun.jndi.dns.timeout.retries", "2");
 		return environment;
 	}
 
@@ -188,8 +191,12 @@ public final class DkimUtilities {
 		propertiesData = propertiesData.replace(" ", "").replace("\t", "").replace("\n", "").replace("\r", "");
 		final Map<String, String> returnMap = new HashMap<>();
 		for (final String keyValueString : propertiesData.split(";")) {
-			final String[] parts = keyValueString.split("=", 2);
-			returnMap.put(parts[0], parts[1]);
+			if (Utilities.isNotBlank(keyValueString)) {
+				final String[] parts = keyValueString.split("=", 2);
+				if (parts.length == 2) {
+					returnMap.put(parts[0], parts[1]);
+				}
+			}
 		}
 		return returnMap;
 	}
@@ -340,8 +347,22 @@ public final class DkimUtilities {
 				if (Utilities.isBlank(cononicalization)) {
 					throw new Exception("DKIM signature is missing the mandatory cononicalization(c) value");
 				}
-				final boolean useRelaxedHeaderCanonicalization = cononicalization.toLowerCase().startsWith("relaxed/");
-				final boolean useRelaxedBodyCanonicalization = cononicalization.toLowerCase().endsWith("/relaxed");
+				final String cononicalizationLower = cononicalization.toLowerCase();
+				final boolean useRelaxedHeaderCanonicalization;
+				final boolean useRelaxedBodyCanonicalization;
+				if (cononicalizationLower.contains("/")) {
+					useRelaxedHeaderCanonicalization = cononicalizationLower.startsWith("relaxed/");
+					useRelaxedBodyCanonicalization = cononicalizationLower.endsWith("/relaxed");
+				} else if ("relaxed".equals(cononicalizationLower)) {
+					// RFC 6376: short form without slash applies to both header and body
+					useRelaxedHeaderCanonicalization = true;
+					useRelaxedBodyCanonicalization = true;
+				} else if ("simple".equals(cononicalizationLower)) {
+					useRelaxedHeaderCanonicalization = false;
+					useRelaxedBodyCanonicalization = false;
+				} else {
+					throw new Exception("DKIM signature has an invalid cononicalization(c) value: " + cononicalization);
+				}
 
 				MessageDigest bodyHashingMessageDigest;
 				try {
@@ -382,7 +403,13 @@ public final class DkimUtilities {
 					throw new MessagingException("Mandatory header 'from' is not included in headers for dkim signature");
 				}
 
-				final String dkimSignatureWithoutSignatureBytesBase64 = dkimSignature.substring(0, dkimSignature.indexOf("b=") + 2);
+				// Find the actual "b=" tag boundary (start of string or after a ";", optionally followed by whitespace),
+				// instead of a naive indexOf which could match "b=" occurring inside another tag's value (e.g. i=).
+				final Matcher bTagMatcher = Pattern.compile("(?:^|;)\\s*b=").matcher(dkimSignature);
+				if (!bTagMatcher.find()) {
+					throw new Exception("DKIM signature is missing the mandatory dkimSignatureBytes(b) tag boundary");
+				}
+				final String dkimSignatureWithoutSignatureBytesBase64 = dkimSignature.substring(0, bTagMatcher.end());
 				serializedHeaderData.append(DkimUtilities.canonicalizeHeader(useRelaxedHeaderCanonicalization, "dkim-signature", dkimSignatureWithoutSignatureBytesBase64));
 
 				final Signature signature = Signature.getInstance(DkimUtilities.SIGNATURE_ALGORITHM_NAME);
