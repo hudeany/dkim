@@ -9,11 +9,22 @@
 	<property name="buildPath" value="build" />
 	<echo message="buildPath: ${buildPath}" />
 
-	<target name="build_jar" depends="cleanup_before, create_jar, cleanup_after" />
+	<target name="build_jar" depends="cleanup_before, create_jar, test, cleanup_after" />
 
 	<target name="cleanup_before">
+		<mkdir dir="${buildPath}" />
+
+		<delete includeEmptyDirs="true">
+			<fileset dir="${buildPath}">
+				<include name="*" />
+			</fileset>
+		</delete>
+
 		<delete dir="${buildPath}/bin" />
 		<mkdir dir="${buildPath}/bin" />
+
+		<delete dir="${buildPath}/testbin" />
+		<mkdir dir="${buildPath}/testbin" />
 	</target>
 	
 	<target name="download_dependencies">
@@ -35,10 +46,14 @@
 				<include name="*" />
 			</fileset>
 		</delete>
-		
-		<get src="https://repo1.maven.org/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar" dest="lib_test/" />
+
+		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api/6.0.3/junit-jupiter-api-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-engine/6.0.3/junit-jupiter-engine-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-launcher/6.0.3/junit-platform-launcher-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-engine/6.0.3/junit-platform-engine-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-commons/6.0.3/junit-platform-commons-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar" dest="lib_test/" />
 	</target>
 	
 	<target name="create_jar" depends="cleanup_before, download_dependencies">
@@ -78,8 +93,59 @@
 		<checksum file="${buildPath}/dkim-${version}_sources.jar" fileext=".md5" forceOverwrite="yes"/>
 		<checksum file="${buildPath}/dkim-${version}_sources.jar" algorithm="SHA-1" fileext=".sha1" forceOverwrite="yes" />
 	</target>
-	
-	<target name="cleanup_after">
+
+	<target name="test" depends="create_jar">
+		<path id="test.libs">
+			<fileset dir="lib_test">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+
+		<path id="runtime.classpath">
+			<fileset dir="${buildPath}">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+
+		<path id="test.classpath">
+			<path refid="test.libs" />
+			<path refid="build.classpath" />
+			<path refid="runtime.classpath" />
+			<pathelement path="${buildPath}/testbin" />
+		</path>
+
+		<javac release="17" destdir="${buildPath}/testbin" srcdir="src/test/java" includeantruntime="false" failonerror="true">
+			<classpath refid="test.classpath" />
+			<include name="**/*.java" />
+		</javac>
+
+		<copy todir="${buildPath}/testbin">
+			<fileset dir="src/test/resources" erroronmissingdir="false" />
+		</copy>
+
+		<fileset id="testbin.classes" dir="${buildPath}/testbin">
+			<include name="**/*.class" />
+		</fileset>
+
+		<junitlauncher printSummary="true" failureProperty="test.failed">
+			<classpath refid="test.classpath" />
+			<testclasses outputdir="${buildPath}">
+				<fileset dir="${buildPath}/testbin">
+					<include name="**/*.class" />
+				</fileset>
+			</testclasses>
+		</junitlauncher>
+		<fail if="test.failed" message="Tests failed!" />
+	</target>
+
+	<target name="cleanup_after" depends="test">
 		<delete dir="${buildPath}/bin" />
+		<delete dir="${buildPath}/testbin" />
+
+		<delete includeEmptyDirs="true">
+			<fileset dir="${buildPath}">
+				<include name="TEST-*" />
+			</fileset>
+		</delete>
 	</target>
 </project>

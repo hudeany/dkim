@@ -71,7 +71,7 @@ public class DkimSignedMessage extends MimeMessage {
 		}
 	}
 
-	public DkimSignedMessage setDkimKeyData(final String domain, final String selector, final RSAPrivateKey privateRsaKey, final String identity) throws Exception {
+	public void setDkimKeyData(final String domain, final String selector, final RSAPrivateKey privateRsaKey, final String identity) throws Exception {
 		if (Utilities.isBlank(domain)) {
 			throw new Exception("DKIM domain may not be empty");
 		} else if (containsHeaderInjectionCharacters(domain)) {
@@ -88,21 +88,30 @@ public class DkimSignedMessage extends MimeMessage {
 		this.selector = selector;
 		this.privateRsaKey = privateRsaKey;
 		this.identity = identity;
+	}
 
+	public DkimSignedMessage withDkimKeyData(final String newDomain, final String newSelector, final RSAPrivateKey newPrivateRsaKey, final String newIdentity) throws Exception {
+		setDkimKeyData(newDomain, newSelector, newPrivateRsaKey, newIdentity);
 		return this;
 	}
 
-	public DkimSignedMessage setCanonicalization(final boolean useRelaxedHeaderCanonicalization, final boolean useRelaxedBodyCanonicalization) {
+	public void setCanonicalization(final boolean useRelaxedHeaderCanonicalization, final boolean useRelaxedBodyCanonicalization) {
 		this.useRelaxedHeaderCanonicalization = useRelaxedHeaderCanonicalization;
 		this.useRelaxedBodyCanonicalization = useRelaxedBodyCanonicalization;
+	}
 
+	public DkimSignedMessage withCanonicalization(final boolean newUseRelaxedHeaderCanonicalization, final boolean newUseRelaxedBodyCanonicalization) {
+		setCanonicalization(newUseRelaxedHeaderCanonicalization, newUseRelaxedBodyCanonicalization);
 		return this;
 	}
 
-	public DkimSignedMessage setExcludedHeaders(final String... headerNames) {
+	public void setExcludedHeaders(final String... headerNames) {
 		excludedHeaderNames = new HashSet<>();
 		excludedHeaderNames.addAll(Arrays.asList(headerNames));
+	}
 
+	public DkimSignedMessage withExcludedHeaders(final String... headerNames) {
+		setExcludedHeaders(headerNames);
 		return this;
 	}
 
