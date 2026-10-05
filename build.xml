@@ -1,15 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="build_jar" name="Create all Jars for Project DKIM">
-	<loadfile property="version" srcFile="build.version" failonerror="false" />
+<project default="build_jar" name="DKIM">
+	<!-- ===== Project specific part ===== -->
+
+	<!-- Artifact name used for the jar file names and the Maven artifactId -->
+	<property name="artifactId" value="dkim" />
+
+	<!-- Bouncy Castle version -->
+	<property name="bouncycastle.version" value="1.86" />
+
+	<!-- Runtime libraries of this project go to "lib/" (may stay empty) -->
+	<target name="download_dependencies">
+		<mkdir dir="lib/" />
+		<delete includeEmptyDirs="true">
+			<fileset dir="lib/">
+				<include name="*" />
+			</fileset>
+		</delete>
+
+		<get src="https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/jakarta/mail/jakarta.mail-api/2.1.5/jakarta.mail-api-2.1.5.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-mail/2.0.5/angus-mail-2.0.5.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-activation/2.0.3/angus-activation-2.0.3.jar" dest="lib/" />
+	</target>
+
+	<!-- ===== Common part: identical in all library build files, do not change per project ===== -->
+
+	<echo message="Java Version: ${java.version}" />
+	<echo message="Ant Version: ${ant.version}" />
+
+	<!-- Strip line breaks so a trailing newline in build.version does not end up in file names -->
+	<loadfile property="version" srcFile="build.version" failonerror="false">
+		<filterchain>
+			<striplinebreaks />
+		</filterchain>
+	</loadfile>
 	<property name="version" value="noVersion" />
-	
-	<property name="projectsPath" value="${user.home}/git" />
-	<echo message="projectsPath: ${projectsPath}" />
-	
+
+	<echo message="artifactId: ${artifactId}" />
+	<echo message="version (build.version): ${version}" />
+
 	<property name="buildPath" value="build" />
 	<echo message="buildPath: ${buildPath}" />
 
-	<target name="build_jar" depends="cleanup_before, create_jar, test, cleanup_after" />
+	<!-- Runtime libraries; an empty or missing "lib/" directory is fine -->
+	<path id="runtime.libs">
+		<fileset dir="lib" erroronmissingdir="false">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Test libraries, same for all libraries -->
+	<target name="download_test_dependencies">
+		<mkdir dir="lib_test/" />
+		<delete includeEmptyDirs="true">
+			<fileset dir="lib_test/">
+				<include name="*" />
+			</fileset>
+		</delete>
+
+		<get src="https://repo1.maven.org/maven2/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api/6.0.3/junit-jupiter-api-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-engine/6.0.3/junit-jupiter-engine-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-params/6.0.3/junit-jupiter-params-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-launcher/6.0.3/junit-platform-launcher-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-engine/6.0.3/junit-platform-engine-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-commons/6.0.3/junit-platform-commons-6.0.3.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar" dest="lib_test/" />
+		<get src="https://repo1.maven.org/maven2/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar" dest="lib_test/" />
+	</target>
+
+	<target name="build_jar" depends="cleanup_before, create_jar, test, create_javadoc, cleanup_after" />
 
 	<target name="cleanup_before">
 		<mkdir dir="${buildPath}" />
@@ -26,95 +86,48 @@
 		<delete dir="${buildPath}/testbin" />
 		<mkdir dir="${buildPath}/testbin" />
 	</target>
-	
-	<target name="download_dependencies">
-		<mkdir dir="lib" />
-		<delete includeEmptyDirs="true">
-			<fileset dir="lib">
-				<include name="*" />
-			</fileset>
-		</delete>
 
-		<get src="https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/2.1.3/jakarta.activation-api-2.1.3.jar" dest="lib/" />
-		<get src="https://repo1.maven.org/maven2/jakarta/mail/jakarta.mail-api/2.1.3/jakarta.mail-api-2.1.3.jar" dest="lib/" />
-		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-mail/2.0.3/angus-mail-2.0.3.jar" dest="lib/" />
-		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar" dest="lib/" />
-		
-		<mkdir dir="lib_test/" />
-		<delete includeEmptyDirs="true">
-			<fileset dir="lib_test/">
-				<include name="*" />
-			</fileset>
-		</delete>
-
-		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api/6.0.3/junit-jupiter-api-6.0.3.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-engine/6.0.3/junit-jupiter-engine-6.0.3.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-launcher/6.0.3/junit-platform-launcher-6.0.3.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-engine/6.0.3/junit-platform-engine-6.0.3.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-commons/6.0.3/junit-platform-commons-6.0.3.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar" dest="lib_test/" />
-		<get src="https://repo1.maven.org/maven2/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar" dest="lib_test/" />
-	</target>
-	
 	<target name="create_jar" depends="cleanup_before, download_dependencies">
-		<path id="build.classpath">
-			<fileset dir="lib">
-				<include name="*.jar" />
-			</fileset>
-		</path>
-		
-		<javac release="17" debug="true" nowarn="true" deprecation="false" destdir="${buildPath}/bin" fork="yes" srcdir="src/main/java" includeantruntime="false" encoding="UTF-8">
-			<classpath refid="build.classpath" />
+		<javac release="17" srcdir="src/main/java" destdir="${buildPath}/bin" includeantruntime="false" encoding="UTF-8" debug="true" deprecation="false" nowarn="true">
+			<classpath refid="runtime.libs" />
 			<compilerarg value="-Xlint:unchecked" />
 			<compilerarg value="-parameters" />
 		</javac>
-		
-		<jar destfile="${buildPath}/dkim-${version}.jar">
+
+		<copy todir="${buildPath}/bin">
+			<fileset dir="src/main/resources" erroronmissingdir="false" />
+		</copy>
+
+		<jar destfile="${buildPath}/${artifactId}-${version}.jar">
 			<manifest>
 				<attribute name="Version" value="${version}" />
 			</manifest>
-					
+
 			<fileset dir="${buildPath}/bin" />
-			
-			<fileset dir="" includes="LICENSE.txt"/>
+			<fileset dir="" includes="LICENSE.txt" />
 		</jar>
-		<checksum file="${buildPath}/dkim-${version}.jar" fileext=".md5" forceOverwrite="yes" />
-		<checksum file="${buildPath}/dkim-${version}.jar" algorithm="SHA-1" fileext=".sha1" forceOverwrite="yes" />
-		
-		<jar destfile="${buildPath}/dkim-${version}-sources.jar">
+
+		<jar destfile="${buildPath}/${artifactId}-${version}-sources.jar">
 			<manifest>
 				<attribute name="Version" value="${version}" />
 			</manifest>
-	
-			<fileset dir="src/main/java" includes="**/*.java"/>
-			
-			<fileset dir="" includes="LICENSE.txt"/>
+
+			<fileset dir="src/main/java" includes="**/*.java" />
+			<fileset dir="" includes="LICENSE.txt" />
 		</jar>
-		<checksum file="${buildPath}/dkim-${version}-sources.jar" fileext=".md5" forceOverwrite="yes"/>
-		<checksum file="${buildPath}/dkim-${version}-sources.jar" algorithm="SHA-1" fileext=".sha1" forceOverwrite="yes" />
 	</target>
 
-	<target name="test" depends="create_jar">
-		<path id="test.libs">
+	<target name="test" depends="create_jar, download_test_dependencies">
+		<path id="test.classpath">
 			<fileset dir="lib_test">
 				<include name="*.jar" />
 			</fileset>
+			<path refid="runtime.libs" />
+			<pathelement location="${buildPath}/${artifactId}-${version}.jar" />
+			<pathelement location="${buildPath}/testbin" />
 		</path>
 
-		<path id="runtime.classpath">
-			<fileset dir="${buildPath}">
-				<include name="*.jar" />
-			</fileset>
-		</path>
-
-		<path id="test.classpath">
-			<path refid="test.libs" />
-			<path refid="build.classpath" />
-			<path refid="runtime.classpath" />
-			<pathelement path="${buildPath}/testbin" />
-		</path>
-
-		<javac release="17" destdir="${buildPath}/testbin" srcdir="src/test/java" includeantruntime="false" failonerror="true">
+		<javac release="17" srcdir="src/test/java" destdir="${buildPath}/testbin" includeantruntime="false" encoding="UTF-8" debug="true" failonerror="true">
 			<classpath refid="test.classpath" />
 			<include name="**/*.java" />
 		</javac>
@@ -123,22 +136,53 @@
 			<fileset dir="src/test/resources" erroronmissingdir="false" />
 		</copy>
 
-		<fileset id="testbin.classes" dir="${buildPath}/testbin">
-			<include name="**/*.class" />
-		</fileset>
-
 		<junitlauncher printSummary="true" failureProperty="test.failed">
 			<classpath refid="test.classpath" />
 			<testclasses outputdir="${buildPath}">
 				<fileset dir="${buildPath}/testbin">
 					<include name="**/*.class" />
 				</fileset>
+				<!-- Writes a report per test class to TEST-*.txt, including details of failed tests -->
+				<listener type="legacy-brief" sendSysOut="false" sendSysErr="false" />
 			</testclasses>
 		</junitlauncher>
+
+		<!-- Show which tests failed and why before stopping the build (only reports with failures or errors) -->
+		<concat if:set="test.failed" xmlns:if="ant:if">
+			<fileset dir="${buildPath}" includes="TEST-*.txt">
+				<or>
+					<contains text="FAILED" />
+					<contains text="Caused an ERROR" />
+				</or>
+			</fileset>
+		</concat>
 		<fail if="test.failed" message="Tests failed!" />
 	</target>
 
-	<target name="cleanup_after" depends="test">
+	<target name="create_javadoc" depends="create_jar">
+		<delete dir="${buildPath}/javadoc" />
+		<mkdir dir="${buildPath}/javadoc" />
+
+		<!-- doclint disabled so missing javadoc comments do not break the build -->
+		<javadoc destdir="${buildPath}/javadoc" encoding="UTF-8" charset="UTF-8" docencoding="UTF-8" source="17" failonerror="true">
+			<classpath refid="runtime.libs" />
+			<arg value="-quiet" />
+			<fileset dir="src/main/java" includes="**/*.java" />
+		</javadoc>
+
+		<jar destfile="${buildPath}/${artifactId}-${version}-javadoc.jar">
+			<manifest>
+				<attribute name="Version" value="${version}" />
+			</manifest>
+
+			<fileset dir="${buildPath}/javadoc" />
+			<fileset dir="" includes="LICENSE.txt" />
+		</jar>
+
+		<delete dir="${buildPath}/javadoc" />
+	</target>
+
+	<target name="cleanup_after" depends="test, create_javadoc">
 		<delete dir="${buildPath}/bin" />
 		<delete dir="${buildPath}/testbin" />
 
