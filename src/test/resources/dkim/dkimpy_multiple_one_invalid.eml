@@ -1,0 +1,31 @@
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=example.com;
+ i=@example.com; q=dns/txt; s=sel; t=1791319405; h=from : to : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding : from;
+ bh=sIAi0xXPHrEtJmW97Q5q9AZTwKC+l1Iy+0m8vQIc/DY=;
+ b=Z95apQ+YVQ+247BiHTsJrhVbbhn5L8Dfa7Q/GJEYMTAIbb/oejutlmmQZGu4GtgxyRFoj
+ ilhY+hmqx6o7C+ZjUurKwjRVErBz4UOgKyD6I0VQgzCGzh80DfcLej7E1M1+nJMhznDS8Lp
+ pTVFsVoNhjT85Po6L240jKKgYxUNUAQ1KjbjmhqkFbObIgqL4JtWAPgPMz1CmEVQtdGUgTJ
+ /nOsdzqlYaHbszvmH4pMwGg3Ot9a0jRizTvkxJ6jSLmekSnijCZkP4q+b/E71ZBhU+hmlAt
+ Pfv/ZUirjTFs4OF9sGNBsQ+xZr4oP08n13wsW3ShFPuaTM/pcn62crNKECzQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=example.com;
+ i=@example.com; q=dns/txt; s=sel; t=1791319405; h=from : to : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding : from;
+ bh=sIAi0xXPHrEtJmW97Q5q9AZTwKC+l1Iy+0m8vQIc/DY=;
+ b=NlNmwgO/8LorpwegEbr4+nbMOzSGklNjqJANNyljOZG7SgaH9iUtZGKH/tk/ZmeKfKFM8
+ STuQDgx6qMPc9kY4W/W+ggjDS8YwrKiVChM1AgAEu3WA472b8Gjhxw++g+E3gY4hVXenvAt
+ ozM5m1AVKBJB64MCg7zqzA3xtTOnSaD4hkZWpgrs1Y1JuViHlZHUWWh5M7tagIbN9peNnmL
+ mtdsjDgCfaWYVBlJEjFj+P3nBqifzQ1fT9or2FMRHTUxyLE31/in+KELPpPTVdxYX0LNEyS
+ +X61k0Jc1YQ4YjCS33fOKJP4RIbJOoZUNkyBic8Jkby2xcrXhnM+yumAJaTA==
+Return-Path: <bounce@example.com>
+From: Sender <sender@example.com>
+To: recipient@example.com
+Subject: Multiple signatures
+Date: Tue, 06 Oct 2026 12:00:00 +0000
+Message-ID: <multi@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Hello World

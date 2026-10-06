@@ -1,0 +1,21 @@
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=other.example.net;
+ i=@other.example.net; q=dns/txt; s=sel; t=1791319405; h=from : to :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding : from;
+ bh=sIAi0xXPHrEtJmW97Q5q9AZTwKC+l1Iy+0m8vQIc/DY=;
+ b=RPNYCudTXqNmWZsigqlcSoy9Plnrtj0QTxuZxBhP1fT6twEoHvuuYR3AceCY8YVAK8LsU
+ PPF+ZymLUOnoY+CWjOW7DvB+53BCn215OKHx1u5+Yb8zRWkUx8w+A3rddJJUrlAKY5GZ/na
+ sPhNeLSwbBE5oBvhakcY5yvDc0h0H7+CmFdR117V+FKJEZK8f5Q6MCy49M0ZOImRdOEmA8d
+ 95wNZ0Ch+HR+6QzmoLh9MuTr6boDhYsmKuDt2JkkRbbuq26riO5VwK+CkdAlUCfKLPji53q
+ RLcXpVsL/fjDiQqpVBZTWZ2YJ+Dsk64Bqo5mvvBPkv53AUkpzkTv3TlfjpOA==
+Return-Path: <bounce@example.com>
+From: Sender <sender@example.com>
+To: recipient@example.com
+Subject: Multiple signatures
+Date: Tue, 06 Oct 2026 12:00:00 +0000
+Message-ID: <multi@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Hello World

@@ -1,0 +1,23 @@
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=example.com;
+ i=@example.com; q=dns/txt; s=sel; t=1791318758; h=from : to : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding : from;
+ bh=DuNELq27ROwfGncRSb+RneMYC0kBLl035h4vz5rcJeM=;
+ b=U8eQhm/NEPxfZeKXxajoWenJX5H5eyw9z4hA1z3WwB52dlKzdpefptvEtkHIj3bS8wIvE
+ jcYDC9TCDvKD3HxlXeMaXjcxFgdvYkh8Bf5EdZtNVMDhQDQZE07SRZZM6Ub2ZX7A3KlVTLt
+ EpuR3sska6xEPsPgSRaglGSh/BNhBVu7fKWY9LLdO6l9UsHdEz+qHo1hIokDwPSA6PKRpA5
+ B9K7l9xm78mHRO50AL0T1F00r+Y6hNXZ06UiJtFzZUiWyI5Ke/Nya5ca7L0f7+T8B/087rV
+ 7Jlx9aVmXWeVZRE294nqB6o8f/vl+VnjGs4rddYrfMXHXfiI7awNEJStcO9w==
+Return-Path: <bounce@example.com>
+From: Sender <sender@example.com>
+To: recipient@example.com
+Subject: Test subject that is long enough to be folded somewhere in the
+ middle of the line
+Date: Tue, 06 Oct 2026 12:00:00 +0000
+Message-ID: <x@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Gr=C3=BC=C3=9Fe aus M=C3=BCnchen, eine lange Zeile mit Umlauten =C3=A4=C3=B6=C3=BC und =
+weiterem Text

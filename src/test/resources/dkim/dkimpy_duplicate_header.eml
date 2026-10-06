@@ -1,0 +1,26 @@
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=example.com;
+ i=@example.com; q=dns/txt; s=sel; t=1791318758; h=from : to : subject
+ : x-dup : x-dup : x-dup;
+ bh=Et2TVpmqdJ77gOIKnH0HwrWaU629iLPDp8zhJB9K6xc=;
+ b=KyZbTNtIOstSu17+Nefni75ebsBGJW1J9JXqvNBmVZr9PUKW1xMjuKI4x/GsyiJWTSC7j
+ D5VOQOCL8n2iD/MdK3c9Dmu8QvsCluwuzKFn154wS61gzZ7q4Y/wDxYTUv9cUCyg6VdFR1U
+ LAprdxdpRQMzgaRPsvuorv4vF9CIeuGQDIkjKplMHi1m7MDuRSuY6TzFSAt868pAvsinw9t
+ B1xbSTgxG6JiyQlqhsCg2l6LnR1tG66ck3ovDAmLR1QTtetPfRihe4GGR14p9tR8K+yUBD5
+ nlj4nXOMJV3ERL66P/G8UpDygbXzmPt58niiWwbclpAWZZyQwphFp1FOmIXg==
+Return-Path: <bounce@example.com>
+From: Sender <sender@example.com>
+To: recipient@example.com
+Subject: Test subject that is long enough to be folded somewhere in the
+ middle of the line
+Date: Tue, 06 Oct 2026 12:00:00 +0000
+Message-ID: <x@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Dup: first
+X-Dup: second
+
+Hello World
+  indented   line  
+
+

@@ -1,0 +1,25 @@
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=example.com;
+ i=@example.com; q=dns/txt; s=sel; t=1791318758; h=from : to : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding : from;
+ bh=VU4hpU/ZPPKzSIEu0wLbdAaILnw0e1zoFkToKLFLpGk=;
+ b=qJ1ycOhQu8diyrFeMcpNt5rahQfvLb93GmqEKm2mkKF9ggAz4uIFhq1txZ0GagH7tTX6B
+ UDo/CKNuYQzoIYPofwzzC4csv1uDXaNNa5XeuPD2ddSimlkRZPVEqrjgPK7tu1rOc2BaNwb
+ 0FQYq7cd564QYllZvYko8MDyTKwj3Lc8u1gVEkEdq/lKElb914zq1WJWpx2UbyQrLyH9ZIH
+ WsmvR8zM4lthDIGTWBZQLV8Lvkuk7VDIghkbIgxWsbdDWzW6p+LKcVj8P5vG17NJctPZ2Ac
+ QvQQb5Ewc+A2dqkCIufxS9xjZDXTseEF1krNRrhxG+0jbEUn1NET76iNuzog==
+Return-Path: <bounce@example.com>
+From: Sender <sender@example.com>
+To: recipient@example.com
+Subject: Test subject that is long enough to be folded somewhere in the
+ middle of the line
+Date: Tue, 06 Oct 2026 12:00:00 +0000
+Message-ID: <x@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Hello World
+  indented   line  
+
+
