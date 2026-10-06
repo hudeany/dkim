@@ -254,7 +254,7 @@ public class DkimBugfixTest {
 
 	@Test
 	public void testDomainAlignment() throws Exception {
-		// Valid signature of another domain than the Return-Path domain
+		// Valid signature of another domain than the From and Return-Path domain
 		final MimeMessage otherDomainMessage = readResource("dkimpy_other_domain.eml");
 		final DkimVerificationResult returnPathResult = DkimUtilities.verifyDkimSignatures(otherDomainMessage, DkimUtilities.DomainAlignment.RETURN_PATH);
 		assertTrue(returnPathResult.getSignatureResults().get(0).isValid());
@@ -268,9 +268,20 @@ public class DkimBugfixTest {
 		final MimeMessage fromAlignedMessage = readResource("dkimpy_from_aligned.eml");
 		assertTrue(DkimUtilities.verifyDkimSignatures(fromAlignedMessage, DkimUtilities.DomainAlignment.FROM).isValid());
 		assertFalse(DkimUtilities.verifyDkimSignatures(fromAlignedMessage, DkimUtilities.DomainAlignment.RETURN_PATH).isValid());
+		// The From domain is the default
+		assertEquals(Boolean.TRUE, DkimUtilities.checkDkimSignature(fromAlignedMessage));
 
 		// Return-Path in a subdomain of the signing domain
-		assertEquals(Boolean.TRUE, DkimUtilities.verifyDkimSignature(readResource("dkimpy_return_path_subdomain.eml")));
+		assertTrue(DkimUtilities.verifyDkimSignatures(readResource("dkimpy_return_path_subdomain.eml"), DkimUtilities.DomainAlignment.RETURN_PATH).isValid());
+	}
+
+	@Test
+	public void testDefaultAlignmentDoesNotNeedReturnPath() throws Exception {
+		final DkimSignedMessage message = createMessage("<9@own.example.com>");
+		message.setDkimKeyData("own.example.com", "sel", privateKey, null);
+		final MimeMessage receivedMessage = new MimeMessage(SESSION, new ByteArrayInputStream(write(message)));
+		assertEquals(Boolean.TRUE, DkimUtilities.verifyDkimSignature(receivedMessage));
+		assertFalse(DkimUtilities.verifyDkimSignatures(receivedMessage, DkimUtilities.DomainAlignment.RETURN_PATH).isValid());
 	}
 
 	@Test

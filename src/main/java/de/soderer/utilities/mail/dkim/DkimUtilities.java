@@ -38,7 +38,8 @@ import jakarta.mail.internet.MimeMessage;
 /**
  * DKIM helper methods: verification of DKIM signatures (RFC 6376, algorithm rsa-sha256), canonicalization, retrieval and caching of the public keys from DNS.
  * <p>
- * Besides the checks of RFC 6376, the verification requires a single DKIM signature and a Return-Path header, whose domain equals the signing domain (d=).
+ * A message may have several DKIM signatures, which are verified independently. By default, a message is valid, if at least one signature is valid and its signing domain (d=)
+ * matches the domain of the From header, as used by DMARC (see {@link DomainAlignment}).
  */
 public final class DkimUtilities {
 	/**
@@ -81,16 +82,21 @@ public final class DkimUtilities {
 	public static final int MAXIMUM_SIGNATURES_TO_VERIFY = 10;
 
 	/**
+	 * Domain alignment used by {@link #checkDkimSignature(Message)} and {@link #verifyDkimSignature(Message)}: the domain of the From header, as used by DMARC.
+	 */
+	public static final DomainAlignment DEFAULT_DOMAIN_ALIGNMENT = DomainAlignment.FROM;
+
+	/**
 	 * Domain, which the signing domain (d=) of a valid signature must match. The signing domain must be the same as this domain or one of its parent domains.
 	 */
 	public enum DomainAlignment {
 		/**
-		 * The domain of the Return-Path header (envelope sender)
+		 * The domain of the Return-Path header (envelope sender, bounce address). Mails of mailing services often use the domain of the service here.
 		 */
 		RETURN_PATH("Return-Path"),
 
 		/**
-		 * The domain of the From header, as used by DMARC
+		 * The domain of the From header, which is shown to the recipient, as used by DMARC (default)
 		 */
 		FROM("From"),
 
@@ -561,7 +567,8 @@ public final class DkimUtilities {
 	}
 
 	/**
-	 * Checks the DKIM signatures of a message: valid, if at least one signature is valid and its signing domain (d=) matches the domain of the Return-Path header.
+	 * Checks the DKIM signatures of a message: valid, if at least one signature is valid and its signing domain (d=) matches the domain of the From header
+	 * ({@link DomainAlignment#FROM}, as used by DMARC).
 	 * Use {@link #verifyDkimSignatures(Message, DomainAlignment)} to get the details of all signatures.
 	 *
 	 * @param message the received message
@@ -577,14 +584,15 @@ public final class DkimUtilities {
 
 	/**
 	 * Verifies the DKIM signatures of a message and reports the reasons of a failed verification by an exception.
-	 * The message is valid, if at least one signature is valid and its signing domain (d=) matches the domain of the Return-Path header.
+	 * The message is valid, if at least one signature is valid and its signing domain (d=) matches the domain of the From header
+	 * ({@link DomainAlignment#FROM}, as used by DMARC).
 	 *
 	 * @param message the received message
 	 * @return null if the message has no DKIM signature, true if a valid matching signature exists
 	 * @throws Exception if no valid matching signature exists, with the reasons of all signatures as message
 	 */
 	public static Boolean verifyDkimSignature(final Message message) throws Exception {
-		final DkimVerificationResult result = verifyDkimSignatures(message, DomainAlignment.RETURN_PATH);
+		final DkimVerificationResult result = verifyDkimSignatures(message, DEFAULT_DOMAIN_ALIGNMENT);
 		if (!result.isSigned()) {
 			return null;
 		} else if (result.isValid()) {

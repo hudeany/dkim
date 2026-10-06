@@ -13,7 +13,7 @@ Sign outgoing emails with DKIM (RFC 6376) and verify the DKIM signatures of rece
 - Only the headers, which are actually written, are signed (e.g. `Bcc` is excluded when sending)
 - Optional signing identity (`i=`) and headers excluded from signing
 - Verification of all DKIM signatures of a message (multiple signatures as defined in RFC 6376)
-- Configurable check of the signing domain against the Return-Path or the From domain (as used by DMARC)
+- Check of the signing domain against the From domain (as used by DMARC, default) or the Return-Path domain
 - Detailed verification result per signature, including the reason of failed verifications
 - Support of over-signed headers, `x=` (expiration), `l=` (body length) and key record flags
 - Public keys are retrieved from DNS with timeouts and cached (configurable time to live)
@@ -101,12 +101,12 @@ if (result == null) {
 }
 ```
 
-`checkDkimSignature` accepts a message, if at least one signature is valid and its signing domain matches the domain of the Return-Path header. `verifyDkimSignature` does the same, but throws an exception with the reasons of a failed verification.
+`checkDkimSignature` accepts a message, if at least one signature is valid and its signing domain matches the domain of the From header, as DMARC does. `verifyDkimSignature` does the same, but throws an exception with the reasons of a failed verification.
 
 ### Detailed verification of all signatures
 
 ```java
-final DkimVerificationResult result = DkimUtilities.verifyDkimSignatures(receivedMessage, DkimUtilities.DomainAlignment.FROM);
+final DkimVerificationResult result = DkimUtilities.verifyDkimSignatures(receivedMessage, DkimUtilities.DomainAlignment.NONE);
 
 System.out.println("Signed: " + result.isSigned());
 System.out.println("Valid: " + result.isValid());
@@ -120,9 +120,9 @@ for (final DkimSignatureResult signatureResult : result.getSignatureResults()) {
 
 | Value | Required domain |
 |---|---|
-| `RETURN_PATH` | Domain of the Return-Path header (envelope sender) |
-| `FROM` | Domain of the From header, as used by DMARC |
-| `NONE` | Any signing domain is accepted |
+| `FROM` (default) | Domain of the From header, which is shown to the recipient, as used by DMARC |
+| `RETURN_PATH` | Domain of the Return-Path header (envelope sender, bounce address) |
+| `NONE` | Any signing domain is accepted, use `getValidDomains()` to decide yourself |
 
 At most 10 signatures of a message are verified (`DkimUtilities.MAXIMUM_SIGNATURES_TO_VERIFY`), because each signature may need a DNS lookup.
 
