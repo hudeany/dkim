@@ -1,4 +1,4 @@
-package de.soderer.utilities.mail.dkim;
+package de.soderer.dkim;
 
 /**
  * Result of the verification of one DKIM signature of a message.

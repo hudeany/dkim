@@ -1,4 +1,4 @@
-package de.soderer.utilities.mail.dkim.utilities;
+package de.soderer.dkim.utilities;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

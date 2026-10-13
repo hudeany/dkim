@@ -1,4 +1,4 @@
-package de.soderer.utilities.mail.dkim;
+package de.soderer.dkim;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-import de.soderer.utilities.mail.dkim.utilities.Utilities;
+import de.soderer.dkim.utilities.Utilities;
 
 /**
  * Public key record of a DKIM signing domain ("selector._domainkey.domain" TXT record, RFC 6376, section 3.6.1).

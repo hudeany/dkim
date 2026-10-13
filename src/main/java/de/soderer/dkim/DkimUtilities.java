@@ -1,4 +1,4 @@
-package de.soderer.utilities.mail.dkim;
+package de.soderer.dkim;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -26,9 +26,9 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
-import de.soderer.utilities.mail.dkim.utilities.IoUtilities;
-import de.soderer.utilities.mail.dkim.utilities.MailUtilities;
-import de.soderer.utilities.mail.dkim.utilities.Utilities;
+import de.soderer.dkim.utilities.IoUtilities;
+import de.soderer.dkim.utilities.MailUtilities;
+import de.soderer.dkim.utilities.Utilities;
 import jakarta.mail.Header;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;

@@ -1,4 +1,4 @@
-package de.soderer.utilities.mail.dkim;
+package de.soderer.dkim;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import de.soderer.dkim.utilities.IoUtilities;
+import de.soderer.dkim.utilities.Utilities;
+
 import java.util.Set;
 
-import de.soderer.utilities.mail.dkim.utilities.IoUtilities;
-import de.soderer.utilities.mail.dkim.utilities.Utilities;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
