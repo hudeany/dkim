@@ -8,6 +8,18 @@
 	<!-- Bouncy Castle version -->
 	<property name="bouncycastle.version" value="1.86" />
 
+	<!-- Dependency versions -->
+	<property name="jakarta-activation-api.version" value="2.1.4" />
+	<property name="jakarta-mail-api.version" value="2.1.5" />
+	<property name="angus-activation.version" value="2.0.3" />
+	<property name="angus-mail.version" value="2.0.5" />
+
+	<!-- Maven POM dependencies: "groupId:artifactId:version[:optional]" -->
+	<property name="mavenDependency.jakarta.activation-api" value="jakarta.activation:jakarta.activation-api:${jakarta-activation-api.version}" />
+	<property name="mavenDependency.jakarta.mail-api" value="jakarta.mail:jakarta.mail-api:${jakarta-mail-api.version}" />
+	<property name="mavenDependency.angus-activation" value="org.eclipse.angus:angus-activation:${angus-activation.version}" />
+	<property name="mavenDependency.angus-mail" value="org.eclipse.angus:angus-mail:${angus-mail.version}" />
+
 	<!-- Runtime libraries of this project go to "lib/" (may stay empty) -->
 	<target name="download_dependencies">
 		<mkdir dir="lib/" />
@@ -17,10 +29,10 @@
 			</fileset>
 		</delete>
 
-		<get src="https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar" dest="lib/" />
-		<get src="https://repo1.maven.org/maven2/jakarta/mail/jakarta.mail-api/2.1.5/jakarta.mail-api-2.1.5.jar" dest="lib/" />
-		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-mail/2.0.5/angus-mail-2.0.5.jar" dest="lib/" />
-		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-activation/2.0.3/angus-activation-2.0.3.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/${jakarta-activation-api.version}/jakarta.activation-api-${jakarta-activation-api.version}.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/jakarta/mail/jakarta.mail-api/${jakarta-mail-api.version}/jakarta.mail-api-${jakarta-mail-api.version}.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-activation/${angus-activation.version}/angus-activation-${angus-activation.version}.jar" dest="lib/" />
+		<get src="https://repo1.maven.org/maven2/org/eclipse/angus/angus-mail/${angus-mail.version}/angus-mail-${angus-mail.version}.jar" dest="lib/" />
 	</target>
 
 	<!-- ===== Common part: identical in all library build files, do not change per project ===== -->
